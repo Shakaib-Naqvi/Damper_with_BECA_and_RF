@@ -206,30 +206,24 @@ public:
 
 
 // Define the pins for TM1637
-const int CLK = 19;  // CLK pin to D5 on TM1637
-const int DIO = 18;  // DIO pin to D7 on TM1637
+const int CLK = 18;  // CLK pin to D5 on TM1637
+const int DIO = 19;  // DIO pin to D7 on TM1637
 
 // Create a display object
 TM1637Display display(CLK, DIO);
 
-void show_on_led(uint8_t mode_1, uint8_t Temp) {
-  // uint8_t segs[];
+
+void show_on_led(uint8_t mode, uint8_t Temp) {
   uint8_t segs_1[] = { 0x00, display.encodeDigit(Temp / 10), display.encodeDigit(Temp % 10), 0x00 };
+
   if (Temp == 0) {
-    segs_1[0] = 0x00;
     segs_1[1] = 0x00;
     segs_1[2] = 0x00;
-    segs_1[3] = 0x00;
-  } else if (Temp == 1) {
-    segs_1[0] = 0x01;
-    segs_1[1] = 0x3F;
-    segs_1[2] = 0x71;
-    segs_1[3] = 0x71;
-  }
-  switch (mode_1) {
+  }  //
+
+  switch (mode) {
     case 0:
       segs_1[0] = 0x00;
-      // segs_1[1] = display.encodeDigit(Temp / 10);
       display.setSegments(segs_1);
       break;
     case 1:
@@ -238,33 +232,21 @@ void show_on_led(uint8_t mode_1, uint8_t Temp) {
       break;
     case 2:
       segs_1[0] = 0x01 | 0x08;
-      segs_1[1] = display.encodeDigit(Temp / 10);
       display.setSegments(segs_1);
       break;
     case 3:
       segs_1[0] = 0x01 | 0x08 | 0x40;
       display.setSegments(segs_1);
       break;
+    case 4:
+      segs_1[0] = 0x79;
+      segs_1[1] = 0x50;
+      segs_1[2] = 0x50;
+      segs_1[3] = 0x06;
+      display.setSegments(segs_1);
+      break;
     default:
-#ifndef DEBUG
-      Serial.println("Mode Number 1 is incorrect");
-#endif
+
       break;
   }
-  //   switch (mode_2) {
-  //     case 1:
-  //       segs_1[3] = 0x39;
-  //       display.setSegments(segs_1);
-  //       break;
-  //     case 2:
-  //       segs_1[3] = 0x6D;
-  //       display.setSegments(segs_1);
-  //       break;
-  //     default:
-  // #ifndef DEBUG
-  //       Serial.println("Mode Number 2 is incorrect");
-  // #endif
-  //       break;
-  //   }
-  // delay(2000);
 }

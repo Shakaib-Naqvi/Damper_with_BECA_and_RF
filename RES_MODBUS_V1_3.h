@@ -1,4 +1,19 @@
-#include "TM1637_Display.h"
+
+
+/*
+index 0 = Thermostat State ( 0 - 1)
+1 = Fan Button (0 - 2)
+2 = Setting Button( 0-2)
+3 = Set Temperature (value divided by 100 to get float )
+4 = Not Used
+5 = Minutes time (0-60) 
+6 = Hour time (0- 23)
+7 = Not Used
+8 = Live Temperature (value divided by 100 to get float )
+9 = Thermostat Output (0-1)
+*/
+
+
 
 // Define modbus parameters and vaiables
 #define MODBUS_SLAVE_ID 0x01
@@ -15,13 +30,6 @@ uint16_t registers[MODBUS_REGISTER_COUNT];
 #define MODBUS true
 #define CANBUS false
 
-// #define DEBUG
-
-
-
-
-// float Te
-// int Mode = 0;
 
 uint16_t calculateCRC16(uint8_t *data, uint16_t length) {
   uint16_t crc = 0xFFFF;
@@ -82,12 +90,12 @@ bool readHoldingRegisters(uint8_t slaveId, uint16_t startAddress, uint16_t regis
       }
       return true;
     } else {
-#ifndef DEBUG
+#ifdef DEBUG
       Serial.println("CRC error!");
 #endif
     }
   } else {
-#ifndef DEBUG
+#ifdef DEBUG
     Serial.println("No response or timeout!");
 #endif
   }
@@ -95,24 +103,24 @@ bool readHoldingRegisters(uint8_t slaveId, uint16_t startAddress, uint16_t regis
 }
 
 
-int read_beca(uint8_t register_value) {
-  if (readHoldingRegisters(MODBUS_SLAVE_ID, MODBUS_REGISTER_ADDRESS, MODBUS_REGISTER_COUNT, registers)) {
-    for (int i = 0; i < MODBUS_REGISTER_COUNT; i++) {
-#ifndef DEBUG
-      Serial.print("Register ");
-      Serial.print(MODBUS_REGISTER_ADDRESS + i);
-      Serial.print(": ");
-      Serial.println(registers[i]);
-#endif
-    }
-  } else {
-#ifndef DEBUG
-    Serial.println("Failed to read registers");
-#endif
-  }
-  int Temp_BECA = registers[register_value];
-  return Temp_BECA;
-}
+// int read_beca(uint8_t register_value) {
+//   if (readHoldingRegisters(MODBUS_SLAVE_ID, MODBUS_REGISTER_ADDRESS, MODBUS_REGISTER_COUNT, registers)) {
+//     for (int i = 0; i < MODBUS_REGISTER_COUNT; i++) {
+// #ifdef DEBUG
+//       Serial.print("Register ");
+//       Serial.print(MODBUS_REGISTER_ADDRESS + i);
+//       Serial.print(": ");
+//       Serial.println(registers[i]);
+// #endif
+//     }
+//   } else {
+// #ifdef DEBUG
+//     Serial.println("Failed to read registers");
+// #endif
+//   }
+//   int value_of_register = registers[register_value];
+//   return value_of_register;
+// }
 
 
 
